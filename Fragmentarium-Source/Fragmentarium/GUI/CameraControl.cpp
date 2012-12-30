@@ -325,11 +325,12 @@ namespace Fragmentarium {
 		}
 
 		void Camera3D::spaceNavMotion(QSpaceNavigatorMotion mo) {
+			if (!up || !target || !eye || !fov) return;
 			qint64 dt = motionTimer.elapsed();
 			motionTimer.restart();
 			dt = dt > 50 ? 50 : dt;
 			
-			float spaceNavTrigger = 20.;
+			float spaceNavTrigger = 10.;
 			float spaceNavTSensibility = stepSize*0.0001f;
 			float spaceNavRSensibility = 0.000003f;
 			if(abs(mo.z) > spaceNavTrigger) {
@@ -537,6 +538,45 @@ namespace Fragmentarium {
 			return keysDown;
 		};
 
+		void Camera2D::spaceNavMotion(QSpaceNavigatorMotion mo) {
+			if (!center || !zoom) return;
+			qint64 dt = motionTimer.elapsed();
+			motionTimer.restart();
+			dt = dt > 50 ? 50 : dt;
+
+			float spaceNavTrigger = 10.;
+			float spaceNavTSensibility = stepSize*0.0001f;
+			float spaceNavRSensibility = 0.000003f;
+
+			float zFactor = 0.1/zoom->getValue();
+			
+			if(abs(mo.y) > spaceNavTrigger) {
+				float factor = pow(1.05f,-1.*mo.y*dt*spaceNavTSensibility);
+				zoom->setValue(zoom->getValue()*factor);
+				askForRedraw = true;
+			}
+			
+			if(abs(mo.x) > spaceNavTrigger) {
+				center->setValue(center->getValue()+Vector3f(zFactor*mo.x*dt*spaceNavTSensibility,0.0,0.0));
+				askForRedraw = true;
+			}
+
+			if(abs(mo.z) > spaceNavTrigger) {
+				center->setValue(center->getValue()+Vector3f(0.0,zFactor*mo.z*dt*spaceNavTSensibility,0.0));
+				askForRedraw = true;
+			}
+		}
+
+		void Camera2D::spaceNavButtonReleased(int bnum) {
+			if(bnum == 0) {
+				stepSize = stepSize/2.0f;
+				INFO(QString("Step size: %1").arg(stepSize));
+			} else if(bnum == 1) {
+				stepSize = stepSize*2.0f;
+				INFO(QString("Step size: %1").arg(stepSize));
+			}
+		};
+
 		bool Camera2D::mouseEvent(QMouseEvent* e, int w, int h) {
 			if (!center || !zoom) return false;
 			Vector3f pos = Vector3f(e->pos().x()/(0.5*float(w))-1.0,1.0-e->pos().y()/(0.5*float(h)),0.0);
@@ -571,6 +611,7 @@ namespace Fragmentarium {
 
 		void Camera2D::reset(bool fullReset) {
 			keyStatus.clear();
+			motionTimer.restart();
 			if (fullReset) stepSize = 1.0;
 		}
 

@@ -103,8 +103,8 @@ namespace Fragmentarium {
 			virtual Vector3f transform(int width, int height);
 			virtual bool mouseEvent(QMouseEvent* e, int w, int h);
 			virtual void wheelEvent(QWheelEvent* /*e*/);
-			virtual void spaceNavMotion(QSpaceNavigatorMotion m){};
-			virtual void spaceNavButtonReleased(int bnum){};
+			virtual void spaceNavMotion(QSpaceNavigatorMotion m);
+			virtual void spaceNavButtonReleased(int bnum);
 			bool parseKeys();
 			virtual void reset(bool fullReset);
 		private:
@@ -115,6 +115,7 @@ namespace Fragmentarium {
 			Vector3f mouseDown;
 			float zoomDown;
 			Vector3f centerDown;
+			QElapsedTimer motionTimer;
 		};
 	}
 };
