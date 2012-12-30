@@ -84,6 +84,8 @@ namespace Fragmentarium {
 			spaceNav = new QSpaceNavigator();
 			connect(spaceNav, SIGNAL(motion(QSpaceNavigatorMotion)),
 					this, SLOT(spaceNavMotion(QSpaceNavigatorMotion)));
+			connect(spaceNav, SIGNAL(buttonReleased(int)),
+					this, SLOT(spaceNavButton(int)));
 		}
 
 		void DisplayWidget::updateRefreshRate() {
@@ -929,6 +931,9 @@ namespace Fragmentarium {
 			cameraControl->spaceNavMotion(m);
 		}
 
+		void DisplayWidget::spaceNavButton(int n) {
+			cameraControl->spaceNavButtonReleased(n);
+		}
 
 		void DisplayWidget::initializeGL()
 		{

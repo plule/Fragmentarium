@@ -68,6 +68,7 @@ namespace Fragmentarium {
 			void clearPreviewBuffer();
 			void timerSignal();
 			void spaceNavMotion(QSpaceNavigatorMotion);
+			void spaceNavButton(int);
 
 		protected:
 			void tileRender();

@@ -40,6 +40,7 @@ namespace Fragmentarium {
 			virtual void wheelEvent(QWheelEvent* /*e*/) {};
 			virtual bool keyPressEvent(QKeyEvent* /*ev*/);
 			virtual void spaceNavMotion(QSpaceNavigatorMotion m) = 0;
+			virtual void spaceNavButtonReleased(int bnum) = 0;
 			virtual bool wantsRedraw() { return askForRedraw; } 
 			virtual void updateState() { parseKeys(); };
 			virtual void reset(bool /*fullReset*/){};
@@ -72,6 +73,7 @@ namespace Fragmentarium {
 			virtual bool mouseEvent(QMouseEvent* e, int w, int h);
 			virtual void wheelEvent(QWheelEvent* /*e*/);
 			virtual void spaceNavMotion(QSpaceNavigatorMotion m);
+			virtual void spaceNavButtonReleased(int bnum);
 			bool parseKeys();
 			virtual void reset(bool fullReset);
 		private:
@@ -102,6 +104,7 @@ namespace Fragmentarium {
 			virtual bool mouseEvent(QMouseEvent* e, int w, int h);
 			virtual void wheelEvent(QWheelEvent* /*e*/);
 			virtual void spaceNavMotion(QSpaceNavigatorMotion m){};
+			virtual void spaceNavButtonReleased(int bnum){};
 			bool parseKeys();
 			virtual void reset(bool fullReset);
 		private:

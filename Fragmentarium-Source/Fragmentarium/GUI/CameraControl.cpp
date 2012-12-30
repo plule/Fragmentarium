@@ -331,7 +331,7 @@ namespace Fragmentarium {
 			
 			float spaceNavTrigger = 20.;
 			float spaceNavTSensibility = stepSize*0.0001f;
-			float spaceNavRSensibility = 0.00001f;
+			float spaceNavRSensibility = 0.000003f;
 			if(abs(mo.z) > spaceNavTrigger) {
 				Vector3f offset = getDirection()*spaceNavTSensibility*mo.z*dt;
 				Vector3f db2 = eye->getValue()+offset;
@@ -368,6 +368,16 @@ namespace Fragmentarium {
 				target->setValue(m*getDirection()+eye->getValue());
 				up->setValue(m*up->getValue());
 				askForRedraw = true;
+			}
+		};
+
+		void Camera3D::spaceNavButtonReleased(int bnum) {
+			if(bnum == 0) {
+				stepSize = stepSize/2.0f;
+				INFO(QString("Step size: %1").arg(stepSize));
+			} else if(bnum == 1) {
+				stepSize = stepSize*2.0f;
+				INFO(QString("Step size: %1").arg(stepSize));
 			}
 		};
 
