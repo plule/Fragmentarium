@@ -113,6 +113,7 @@ namespace Fragmentarium {
 		}
 
 		void Camera3D::reset(bool fullReset) {
+			motionTimer.restart();
 			keyStatus.clear();
                         if (fullReset) stepSize = 0.1f;
 		}
@@ -309,7 +310,66 @@ namespace Fragmentarium {
 				}
 			}
 			return false;
+		};
+
+		Vector3f Camera3D::getDirection() {
+			return (target->getValue()-eye->getValue()).normalized();
 		}
+
+		Vector3f Camera3D::getRight() {
+			return Vector3f::cross(getDirection(), up->getValue().normalized());
+		}
+
+		Vector3f Camera3D::getUp() {
+			return up->getValue().normalized();
+		}
+
+		void Camera3D::spaceNavMotion(QSpaceNavigatorMotion mo) {
+			qint64 dt = motionTimer.elapsed();
+			motionTimer.restart();
+			dt = dt > 50 ? 50 : dt;
+			
+			float spaceNavTrigger = 20.;
+			float spaceNavTSensibility = stepSize*0.0001f;
+			float spaceNavRSensibility = 0.00001f;
+			if(abs(mo.z) > spaceNavTrigger) {
+				Vector3f offset = getDirection()*spaceNavTSensibility*mo.z*dt;
+				Vector3f db2 = eye->getValue()+offset;
+				eye->setValue(db2);
+				target->setValue(target->getValue()+offset);
+				askForRedraw = true;
+			}
+			if(abs(mo.x) > spaceNavTrigger) {
+				Vector3f offset = getRight()*spaceNavTSensibility*mo.x*dt;
+				eye->setValue(eye->getValue()+offset);
+				target->setValue(target->getValue()+offset);
+				askForRedraw = true;
+			}
+			if(abs(mo.y) > spaceNavTrigger) {
+				Vector3f offset = getUp()*spaceNavTSensibility*mo.y*dt;
+				eye->setValue(eye->getValue()+offset);
+				target->setValue(target->getValue()+offset);
+				askForRedraw = true;
+			}
+			if(abs(mo.ry) > spaceNavTrigger) {
+				Matrix4f m = Matrix4f::Rotation(getUp(), spaceNavRSensibility*mo.ry*dt);
+				target->setValue(m*getDirection()+eye->getValue());
+				up->setValue(m*up->getValue());			
+				askForRedraw = true;
+			}
+			if(abs(mo.rx) > spaceNavTrigger) {
+				Matrix4f m = Matrix4f::Rotation(getRight(), spaceNavRSensibility*mo.rx*dt);
+				target->setValue(m*getDirection()+eye->getValue());
+				up->setValue(m*up->getValue());
+				askForRedraw = true;
+			}
+			if(abs(mo.rz) > spaceNavTrigger) {
+				Matrix4f m = Matrix4f::Rotation(getDirection(), spaceNavRSensibility*mo.rz*dt);
+				target->setValue(m*getDirection()+eye->getValue());
+				up->setValue(m*up->getValue());
+				askForRedraw = true;
+			}
+		};
 
 		Vector3f Camera3D::transform(int width, int height) {
 			this->height = height;

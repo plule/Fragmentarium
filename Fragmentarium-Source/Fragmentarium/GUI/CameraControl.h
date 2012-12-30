@@ -7,9 +7,11 @@
 #include <QMouseEvent>
 #include <QStatusBar>
 #include <QGLShaderProgram>
+#include <QElapsedTimer>
 #include "SyntopiaCore/Logging/ListWidgetLogger.h"
 #include "SyntopiaCore/Math/Vector3.h"
 #include "SyntopiaCore/Math/Matrix4.h"
+#include "ThirdPartyCode/QSpaceNavigator.h"
 
 
 namespace Fragmentarium {
@@ -37,6 +39,7 @@ namespace Fragmentarium {
 			virtual bool mouseEvent(QMouseEvent* /*e*/, int /*w*/, int /*h*/) { return false; };
 			virtual void wheelEvent(QWheelEvent* /*e*/) {};
 			virtual bool keyPressEvent(QKeyEvent* /*ev*/);
+			virtual void spaceNavMotion(QSpaceNavigatorMotion m) = 0;
 			virtual bool wantsRedraw() { return askForRedraw; } 
 			virtual void updateState() { parseKeys(); };
 			virtual void reset(bool /*fullReset*/){};
@@ -61,10 +64,14 @@ namespace Fragmentarium {
 			virtual QString getID() { return "3D"; };
 			void printInfo();
 			Vector3f screenTo3D(int sx, int sy, int sz);
+			Vector3f getDirection();
+			Vector3f getRight();
+			Vector3f getUp();
 			virtual Vector3f transform(int width, int height);
 			virtual void connectWidgets(VariableEditor* ve);
 			virtual bool mouseEvent(QMouseEvent* e, int w, int h);
 			virtual void wheelEvent(QWheelEvent* /*e*/);
+			virtual void spaceNavMotion(QSpaceNavigatorMotion m);
 			bool parseKeys();
 			virtual void reset(bool fullReset);
 		private:
@@ -81,6 +88,7 @@ namespace Fragmentarium {
 			Vector3f upDown ;
 			float fovDown;
 			Vector3f mouseDown;
+			QElapsedTimer motionTimer;
 		};
 
 		class Camera2D : public CameraControl {
@@ -93,6 +101,7 @@ namespace Fragmentarium {
 			virtual Vector3f transform(int width, int height);
 			virtual bool mouseEvent(QMouseEvent* e, int w, int h);
 			virtual void wheelEvent(QWheelEvent* /*e*/);
+			virtual void spaceNavMotion(QSpaceNavigatorMotion m){};
 			bool parseKeys();
 			virtual void reset(bool fullReset);
 		private:
@@ -105,8 +114,5 @@ namespace Fragmentarium {
 			Vector3f centerDown;
 		};
 	}
-
-
-
 };
 

@@ -926,7 +926,7 @@ namespace Fragmentarium {
 		}
 
 		void DisplayWidget::spaceNavMotion(QSpaceNavigatorMotion m) {
-			INFO("space nav motion");
+			cameraControl->spaceNavMotion(m);
 		}
 
 
