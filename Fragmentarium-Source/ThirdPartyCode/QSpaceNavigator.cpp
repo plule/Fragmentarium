@@ -15,7 +15,7 @@ QSpaceNavigator::~QSpaceNavigator() {
 void QSpaceNavigator::poll() {
 	spnav_poll_event(&sev);
 	if(sev.type == SPNAV_EVENT_MOTION) {
-		emit motion(sev.motion.x,sev.motion.y,sev.motion.z,sev.motion.rx,sev.motion.ry,sev.motion.rz);
+		emit motion(Motion(sev.motion.x,sev.motion.y,sev.motion.z,sev.motion.rx,sev.motion.ry,sev.motion.rz));
 	} else { /* SPNAV_EVENT_BUTTON */
 		if (sev.button.press)
 			emit buttonPressed(sev.button.bnum);

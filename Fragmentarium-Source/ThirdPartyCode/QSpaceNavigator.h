@@ -16,9 +16,18 @@ class QSpaceNavigator : public QObject
 public:
 	QSpaceNavigator();
 	virtual ~QSpaceNavigator();
+	struct Motion {
+		float x;
+		float y;
+		float z;
+		float rx;
+		float ry;
+		float rz;
+	Motion(float x, float y, float z, float rx, float ry, float rz) : x(x),y(y),z(z),rx(rx),ry(ry),rz(rz){};
+	};
 
 signals:
-	void motion(float x, float y, float z, float rx, float ry, float rz);
+	void motion(Motion m);
 	void buttonPressed(int bnum);
 	void buttonReleased(int bnum);
 
