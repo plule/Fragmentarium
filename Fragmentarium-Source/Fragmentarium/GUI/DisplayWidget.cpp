@@ -80,6 +80,10 @@ namespace Fragmentarium {
 			setFocusPolicy(Qt::WheelFocus);
 			timer = 0;
 			maxSubFrames = 0;
+
+			spaceNav = new QSpaceNavigator();
+			connect(spaceNav, SIGNAL(motion(QSpaceNavigatorMotion)),
+					this, SLOT(spaceNavMotion(QSpaceNavigatorMotion)));
 		}
 
 		void DisplayWidget::updateRefreshRate() {
@@ -919,6 +923,10 @@ namespace Fragmentarium {
 			}
 
 			if (pendingRedraws || continuous || (animationSettings && animationSettings->isRunning())) updateGL();
+		}
+
+		void DisplayWidget::spaceNavMotion(QSpaceNavigatorMotion m) {
+			INFO("space nav motion");
 		}
 
 

@@ -10,6 +10,7 @@
 #include "SyntopiaCore/Logging/ListWidgetLogger.h"
 #include "SyntopiaCore/Math/Vector3.h"
 #include "SyntopiaCore/Math/Matrix4.h"
+#include "ThirdPartyCode/QSpaceNavigator.h"
 #include "../Parser/Preprocessor.h"
 #include "AnimationController.h"
 #include "CameraControl.h"
@@ -66,6 +67,8 @@ namespace Fragmentarium {
 		public slots:
 			void clearPreviewBuffer();
 			void timerSignal();
+			void spaceNavMotion(QSpaceNavigatorMotion);
+
 		protected:
 			void tileRender();
 			void drawFragmentProgram(int w,int h);
@@ -134,6 +137,8 @@ namespace Fragmentarium {
 
 			bool clearOnChange;
 			int iterationsBetweenRedraws;
+
+			QSpaceNavigator *spaceNav;
 		};
 	};
 
