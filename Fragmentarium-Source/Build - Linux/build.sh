@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd ..
-qmake-qt4 -project -after "CONFIG+=opengl" -after "QT+=xml opengl script"
+qmake-qt4 -project -after "CONFIG+=opengl" -after "QT+=xml opengl script" -after "LIBS+=-lspnav"
 qmake-qt4
 make
 
